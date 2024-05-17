@@ -1,17 +1,27 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <h1>{{ message }}</h1>
+    <input v-model="inputText" placeholder="Enter something" />
+    <button @click="displayMessage">Display Message</button>
+    <p v-if="showMessage">{{ inputText }}</p>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      message: "Hello Vue!",
+      inputText: "",
+      showMessage: false
+    };
+  },
+  methods: {
+    displayMessage() {
+      this.showMessage = true;
+    }
   }
-}
+};
 </script>
 
 <style>
@@ -20,7 +30,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   margin-top: 60px;
 }
 </style>
