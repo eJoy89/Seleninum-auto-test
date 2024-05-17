@@ -4,21 +4,37 @@
     <input v-model="inputText" placeholder="Enter something" />
     <button @click="displayMessage">Display Message</button>
     <p v-if="showMessage">{{ inputText }}</p>
+  
+  <BoxTest 
+    :changeColour="changeColour"
+  />
+
+  <button id="color-change-button" @click="colorChange">색변경</button>
   </div>
 </template>
 
 <script>
+import BoxTest from './components/BoxTest.vue';
+
+
 export default {
+  components: {
+    BoxTest
+  },
   data() {
     return {
       message: "Hello Vue!",
       inputText: "",
-      showMessage: false
+      showMessage: false,
+      changeColour: true,
     };
   },
   methods: {
     displayMessage() {
       this.showMessage = true;
+    },
+    colorChange() {
+      this.changeColour = !this.changeColour;
     }
   }
 };

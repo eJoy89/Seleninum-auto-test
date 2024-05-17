@@ -1,8 +1,8 @@
 # vue-selenium-example
 
-## Project setup
+## Run Python 
 ```
-npm install
+python tests\selenium_test.py
 ```
 
 ### Compiles and hot-reloads for development
