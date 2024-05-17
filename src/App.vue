@@ -9,6 +9,8 @@
     :changeColour="changeColour"
   />
 
+  <div class="box" :style="{background: changeColour ? 'blue' : 'pink'}"></div>
+
   <button id="color-change-button" @click="colorChange">색변경</button>
   </div>
 </template>
@@ -47,5 +49,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   margin-top: 60px;
+}
+.box{
+  width: 300px;
+  height: 300px;
 }
 </style>

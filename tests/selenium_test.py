@@ -39,26 +39,32 @@ try:
     result_message = driver.find_element(By.XPATH, '//p')
     assert result_message.text == 'Hello Selenium!', "The displayed message is incorrect"
 
+    # 색변경 버튼 클릭 전 초기 색상 확인
+    log("Checking initial colors...")
+    box_test = driver.find_element(By.CLASS_NAME, 'box-container')
+    initial_color_box_test = box_test.value_of_css_property('background-color')
+    log(f"Initial BoxTest color: {initial_color_box_test}")
+
+    box = driver.find_element(By.CLASS_NAME, 'box')
+    initial_color_box = box.value_of_css_property('background-color')
+    log(f"Initial div box color: {initial_color_box}")
+
+    # 색변경 버튼 클릭
     log("Clicking the color change button...")
     color_change_button = driver.find_element(By.ID, 'color-change-button')
     color_change_button.click()
 
     # 색상 변경 확인
-    log("Checking the box color change...")
+    log("Checking changed colors...")
     time.sleep(1)  # 색상 변경 후 렌더링 대기
-    box = driver.find_element(By.CLASS_NAME, 'box-container')
-    initial_color = box.value_of_css_property('background-color')
-    
-    # 버튼 클릭 전 색상 확인
-    log(f"Initial color: {initial_color}")
-    
-    color_change_button.click()
-    time.sleep(1)  # 색상 변경 후 렌더링 대기
-    changed_color = box.value_of_css_property('background-color')
-    
-    log(f"Changed color: {changed_color}")
-    
-    assert initial_color != changed_color, "The box color did not change"
+    changed_color_box_test = box_test.value_of_css_property('background-color')
+    log(f"Changed BoxTest color: {changed_color_box_test}")
+
+    changed_color_box = box.value_of_css_property('background-color')
+    log(f"Changed div box color: {changed_color_box}")
+
+    assert initial_color_box_test != changed_color_box_test, "The BoxTest color did not change"
+    assert initial_color_box != changed_color_box, "The div box color did not change"
 
     log("Test completed successfully!")
 
