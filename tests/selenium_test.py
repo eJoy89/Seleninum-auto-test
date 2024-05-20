@@ -1,89 +1,26 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
-import time
+from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
 
-def log(message):
-    print(f"[LOG] {message}")
+doc = Document()
 
-try:
-    log("Setting up ChromeDriver...")
-    service = Service(ChromeDriverManager().install())
+def add_underlined_heading(doc, text, level):
+    paragraph = doc.add_heading(text, level)
+    if level == 0:  
+        run = paragraph.runs[0]
+        run.font.underline = True
 
-    options = webdriver.ChromeOptions()
-    # 모바일 장치 설정 
-    mobile_emulation = {
-        "deviceMetrics": { "width": 375, "height": 812, "pixelRatio": 3.0 },
-        "userAgent": (
-                        "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) "
-                        "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-                        "Version/12.0 Mobile/15A372 Safari/604.1"
-                    )
-    }
-    options.add_experimental_option("mobileEmulation", mobile_emulation)
-    # options.add_argument('--headless')  # 필요 시 헤드리스 모드 활성화
+add_underlined_heading(doc, '가장 큰 제목 (아래에 밑줄)', level=0)
+doc.add_heading('제목 크기, H1', level=1)
+doc.add_heading('제목 크기, H2', level=2)
+doc.add_heading('제목 크기, H3', level=3)
+doc.add_heading('제목 크기, H4', level=4)
+doc.add_heading('제목 크기, H5', level=5)
+doc.add_heading('제목 크기, H6', level=6)
 
-    log("Starting ChromeDriver...")
-    driver = webdriver.Chrome(service=service, options=options)
+for paragraph in doc.paragraphs:
+    if paragraph.style.name.startswith('Heading'):
+        paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-    log("Opening Vue.js application...")
-    driver.get('http://localhost:8081')
-
-    log("Waiting for page to load...")
-    time.sleep(2)
-
-    # 입력 필드에 텍스트 입력
-    log("Finding input field and entering text...")
-    input_field = driver.find_element(By.XPATH, '//input[@placeholder="Enter something"]')
-    input_field.send_keys('Hello Selenium!')
-
-    # 모든 버튼 클릭
-    log("Clicking all buttons...")
-    buttons = driver.find_elements(By.XPATH, '//button')
-    for button in buttons:
-        log(f"Clicking button with text: {button.text}")
-        button.click()
-        time.sleep(1)  # 각 버튼 클릭 후 잠시 대기
-
-    # 결과 메시지 확인
-    log("Waiting for result message...")
-    result_message = driver.find_element(By.XPATH, '//p')
-    assert result_message.text == 'Hello Selenium!', "The displayed message is incorrect"
-
-    # 색변경 버튼 클릭 전 초기 색상 확인
-    log("Checking initial colors...")
-    box_test = driver.find_element(By.CLASS_NAME, 'box-container')
-    initial_color_box_test = box_test.value_of_css_property('background-color')
-    log(f"Initial BoxTest color: {initial_color_box_test}")
-
-    box = driver.find_element(By.CLASS_NAME, 'box')
-    initial_color_box = box.value_of_css_property('background-color')
-    log(f"Initial div box color: {initial_color_box}")
-
-    # 색변경 버튼 클릭
-    log("Clicking the color change button...")
-    color_change_button = driver.find_element(By.ID, 'color-change-button')
-    color_change_button.click()
-
-    # 색상 변경 확인
-    log("Checking changed colors...")
-    time.sleep(1)  # 색상 변경 후 렌더링 대기
-    changed_color_box_test = box_test.value_of_css_property('background-color')
-    log(f"Changed BoxTest color: {changed_color_box_test}")
-
-    changed_color_box = box.value_of_css_property('background-color')
-    log(f"Changed div box color: {changed_color_box}")
-
-    assert initial_color_box_test != changed_color_box_test, "The BoxTest color did not change"
-    assert initial_color_box != changed_color_box, "The div box color did not change"
-
-    log("Test completed successfully!")
-
-except Exception as e:
-    log(f"An error occurred: {e}")
-    log(f"Error details: {type(e).__name__}, {e}")
-
-finally:
-    log("Closing browser...")
-    driver.quit()
+doc.save('저장하고 싶은 파일명.docx')
