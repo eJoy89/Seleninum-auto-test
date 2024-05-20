@@ -12,13 +12,23 @@ try:
     service = Service(ChromeDriverManager().install())
 
     options = webdriver.ChromeOptions()
+    # 모바일 장치 설정 
+    mobile_emulation = {
+        "deviceMetrics": { "width": 375, "height": 812, "pixelRatio": 3.0 },
+        "userAgent": (
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) "
+                        "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+                        "Version/12.0 Mobile/15A372 Safari/604.1"
+                    )
+    }
+    options.add_experimental_option("mobileEmulation", mobile_emulation)
     # options.add_argument('--headless')  # 필요 시 헤드리스 모드 활성화
 
     log("Starting ChromeDriver...")
     driver = webdriver.Chrome(service=service, options=options)
 
     log("Opening Vue.js application...")
-    driver.get('http://localhost:8080')
+    driver.get('http://localhost:8081')
 
     log("Waiting for page to load...")
     time.sleep(2)
@@ -28,14 +38,16 @@ try:
     input_field = driver.find_element(By.XPATH, '//input[@placeholder="Enter something"]')
     input_field.send_keys('Hello Selenium!')
 
-    # 버튼 클릭
-    log("Clicking the display message button...")
-    display_button = driver.find_element(By.XPATH, '//button[text()="Display Message"]')
-    display_button.click()
+    # 모든 버튼 클릭
+    log("Clicking all buttons...")
+    buttons = driver.find_elements(By.XPATH, '//button')
+    for button in buttons:
+        log(f"Clicking button with text: {button.text}")
+        button.click()
+        time.sleep(1)  # 각 버튼 클릭 후 잠시 대기
 
     # 결과 메시지 확인
     log("Waiting for result message...")
-    time.sleep(1)
     result_message = driver.find_element(By.XPATH, '//p')
     assert result_message.text == 'Hello Selenium!', "The displayed message is incorrect"
 

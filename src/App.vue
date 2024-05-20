@@ -8,6 +8,9 @@
   <BoxTest 
     :changeColour="changeColour"
   />
+  <button @click="changeBoolean">
+    {{ toggleBtn }}
+  </button>
 
   <div class="box" :style="{background: changeColour ? 'blue' : 'pink'}"></div>
 
@@ -29,6 +32,7 @@ export default {
       inputText: "",
       showMessage: false,
       changeColour: true,
+      toggleBtn: true
     };
   },
   methods: {
@@ -37,6 +41,9 @@ export default {
     },
     colorChange() {
       this.changeColour = !this.changeColour;
+    },
+    changeBoolean() {
+      this.toggleBtn = !this.toggleBtn;
     }
   }
 };
